@@ -2,218 +2,329 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Mistik Tarot Açılımı</title>
+<title>Pro Tarot Ritual v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Quicksand:wght@300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --altin: #d4af37;
-    --mor: #2e004f;
-    --kart-genislik: 180px;
-    --kart-yukseklik: 300px;
+    --gold: #e2b04a;
+    --gold-glow: rgba(226, 176, 74, 0.4);
+    --bg: #050508;
   }
 
   body {
     margin: 0;
-    background: radial-gradient(circle at center, #1a0033 0%, #000 100%);
+    padding: 0;
+    background: var(--bg);
+    background-image: 
+        radial-gradient(circle at 50% 50%, #1a1025 0%, #050508 100%),
+        url('https://www.transparenttextures.com/patterns/stardust.png');
     color: white;
-    font-family: 'Times New Roman', serif;
+    font-family: 'Quicksand', sans-serif;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     overflow: hidden;
+    cursor: none;
   }
 
-  h1 {
-    color: var(--altin);
-    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-    font-size: 2.5rem;
-    margin-bottom: 30px;
+  /* --- SİHİRLİ İMLEÇ --- */
+  #magic-cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 15px 5px white, 0 0 30px 10px var(--gold);
+    z-index: 10000;
+    mix-blend-mode: screen;
   }
 
-  /* Bilgisayar ekranı için yan yana dizilim */
-  .container {
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    background: var(--gold);
+    border-radius: 50%;
+    z-index: 9999;
+    animation: magic-fade 1s ease-out forwards;
+  }
+
+  @keyframes magic-fade {
+    0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
+    100% { transform: scale(3) translateY(-50px); opacity: 0; filter: blur(4px); }
+  }
+
+  /* --- KART ALANI --- */
+  .deck-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 40px;
-    perspective: 1000px;
+    height: 400px;
+    perspective: 2000px;
+    position: relative;
+    width: 100%;
   }
 
   .card {
-    width: var(--kart-genislik);
-    height: var(--kart-yukseklik);
-    cursor: pointer;
+    width: 200px;
+    height: 340px;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
   }
 
-  .card.flip {
+  .inner-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+  }
+
+  .card.flip .inner-card {
     transform: rotateY(180deg);
   }
 
-  .front, .back {
+  .card-face {
     position: absolute;
     width: 100%;
     height: 100%;
-    border-radius: 15px;
     backface-visibility: hidden;
-    border: 3px solid var(--altin);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    border: 3px solid var(--gold);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.7);
   }
 
-  /* Kartın Kapalı Hali */
+  /* Kart Arka Yüzü (Mistik Tasarım) */
   .front {
-    background: linear-gradient(135deg, #1a0033 0%, #4b0082 100%);
+    background: #111;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png'), 
+                      linear-gradient(135deg, #1a0a2a 0%, #000 100%);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  .front::after {
-    content: "🔮";
-    font-size: 60px;
-    filter: drop-shadow(0 0 10px var(--altin));
+  .front::before {
+    content: "";
+    width: 80%;
+    height: 90%;
+    border: 1px solid var(--gold-glow);
+    position: absolute;
+    border-radius: 8px;
   }
 
-  /* Kartın Açık Hali (Resim) */
+  .front-icon {
+    font-size: 50px;
+    color: var(--gold);
+    filter: drop-shadow(0 0 15px var(--gold));
+    animation: pulse 2s infinite ease-in-out;
+  }
+
+  /* Kart Ön Yüzü (Resim) */
   .back {
     transform: rotateY(180deg);
     background-size: cover;
     background-position: center;
-    background-color: white;
+    background-color: #000;
   }
 
-  .info-area {
-    margin-top: 40px;
-    height: 100px;
+  /* --- KARARIŞTIRMA ANİMASYONU --- */
+  .card.shuffling {
+    transition: all 0.5s ease-in-out !important;
+  }
+
+  /* --- ARAYÜZ --- */
+  .interface {
+    margin-top: 60px;
     text-align: center;
+    z-index: 10;
   }
 
-  #card-title {
-    font-size: 2rem;
-    color: var(--altin);
-    margin: 0;
-    text-shadow: 0 0 10px black;
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold);
+    letter-spacing: 8px;
+    font-size: 2.8rem;
+    margin: 0 0 20px 0;
+    text-shadow: 0 0 20px rgba(226, 176, 74, 0.5);
   }
 
-  button {
+  #card-result {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold);
+    font-size: 1.8rem;
+    min-height: 40px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transition: 0.5s;
+  }
+
+  .btn-ritual {
     background: transparent;
-    color: var(--altin);
-    border: 2px solid var(--altin);
-    padding: 15px 35px;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 15px 45px;
+    font-family: 'Cinzel Decorative', serif;
     font-size: 1.2rem;
-    border-radius: 50px;
+    letter-spacing: 3px;
     cursor: pointer;
-    transition: 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: 0.4s;
   }
 
-  button:hover {
-    background: var(--altin);
+  .btn-ritual:hover {
+    background: var(--gold);
     color: black;
-    box-shadow: 0 0 20px var(--altin);
+    box-shadow: 0 0 30px var(--gold-glow);
   }
 
-  .shuffling {
-    animation: shuffle-anim 0.5s ease-in-out infinite;
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
   }
 
-  @keyframes shuffle-anim {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px) rotate(2deg); }
-    100% { transform: translateY(0); }
-  }
 </style>
 </head>
 <body>
 
-<h1>BİLGELİK AÇILIMI</h1>
+<div id="magic-cursor"></div>
 
-<div class="container" id="main-container">
-  <div class="card" onclick="flip(0)"><div class="front"></div><div class="back" id="c0"></div></div>
-  <div class="card" onclick="flip(1)"><div class="front"></div><div class="back" id="c1"></div></div>
-  <div class="card" onclick="flip(2)"><div class="front"></div><div class="back" id="c2"></div></div>
+<div class="interface">
+  <h1>TAROT RİTÜELİ</h1>
+  <div id="card-result"></div>
 </div>
 
-<div class="info-area">
-  <h2 id="card-title"></h2>
-  <p id="status-msg">Hazırsan kartları karıştır...</p>
+<div class="deck-container" id="stage">
+  <div class="card" id="card-0" onclick="reveal(0)">
+    <div class="inner-card">
+      <div class="card-face front"><div class="front-icon">🕯️</div></div>
+      <div class="card-face back" id="img-0"></div>
+    </div>
+  </div>
+  <div class="card" id="card-1" onclick="reveal(1)">
+    <div class="inner-card">
+      <div class="card-face front"><div class="front-icon">🔮</div></div>
+      <div class="card-face back" id="img-1"></div>
+    </div>
+  </div>
+  <div class="card" id="card-2" onclick="reveal(2)">
+    <div class="inner-card">
+      <div class="card-face front"><div class="front-icon">🌙</div></div>
+      <div class="card-face back" id="img-2"></div>
+    </div>
+  </div>
 </div>
 
-<button onclick="karistir()">Kartları Karıştır</button>
+<div class="interface">
+  <p id="status" style="color: #aaa; letter-spacing: 2px;">Zihnini boşalt ve odaklan...</p>
+  <button class="btn-ritual" onclick="startRitual()">KARTLARI KARMIŞTIR</button>
+</div>
 
 <script>
 const baseURL = "https://raw.githubusercontent.com/lenmorld/tarot-api/master/static/cards/";
-const kartHavuzu = [];
+const pool = [];
 
-// --- TÜRKÇE İSİMLER ---
-const majorTurkce = ["Joker", "Büyücü", "Azize", "İmparatoriçe", "İmparator", "Aziz", "Aşıklar", "Araba", "Güç", "Ermiş", "Kader Çarkı", "Adalet", "Asılan Adam", "Ölüm", "Denge", "Şeytan", "Yıkılan Kule", "Yıldız", "Ay", "Güneş", "Mahkeme", "Dünya"];
-const seriler = [{e: "c", t: "Kupalar"}, {e: "p", t: "Tılsımlar"}, {e: "s", t: "Kılıçlar"}, {e: "w", t: "Değnekler"}];
-const rakamlar = ["Ası", "İkilisi", "Üçlüsü", "Dörtlüsü", "Beşlisi", "Altılısı", "Yedilisi", "Sekizlisi", "Dokuzlusu", "Onlusu", "Prensi", "Şövalyesi", "Kraliçesi", "Kralı"];
+// TÜRKÇE VERİTABANI
+const majorNames = ["Joker", "Büyücü", "Azize", "İmparatoriçe", "İmparator", "Aziz", "Aşıklar", "Araba", "Güç", "Ermiş", "Kader Çarkı", "Adalet", "Asılan Adam", "Ölüm", "Denge", "Şeytan", "Yıkılan Kule", "Yıldız", "Ay", "Güneş", "Mahkeme", "Dünya"];
+const suits = [{e:"c", t:"Kupa"}, {e:"p", t:"Tılsım"}, {e:"s", t:"Kılıç"}, {e:"w", t:"Değnek"}];
+const values = ["Ası", "İkilisi", "Üçlüsü", "Dörtlüsü", "Beşlisi", "Altılısı", "Yedilisi", "Sekizlisi", "Dokuzlusu", "Onlusu", "Prensi", "Şövalyesi", "Kraliçesi", "Kralı"];
 
-// Major kartları ekle
-majorTurkce.forEach((ad, i) => {
-  let dosya = i < 10 ? `m0${i}.jpg` : `m${i}.jpg`;
-  kartHavuzu.push({ isim: ad, url: baseURL + dosya });
-});
+majorNames.forEach((n, i) => pool.push({n, u: `${baseURL}m${i < 10 ? '0'+i : i}.jpg`}));
+suits.forEach(s => values.forEach((v, i) => pool.push({n: `${s.t} ${v}`, u: `${baseURL}${s.e}${i+1 < 10 ? '0'+(i+1) : i+1}.jpg`})));
 
-// Minor kartları ekle
-seriler.forEach(seri => {
-  rakamlar.forEach((rAd, i) => {
-    let sayi = (i + 1) < 10 ? `0${i+1}` : (i + 1);
-    kartHavuzu.push({
-      isim: `${seri.t} ${rAd}`,
-      url: `${baseURL}${seri.e}${sayi}.jpg`
-    });
-  });
-});
+let activeDeck = [];
+let isRitualActive = false;
 
-let secilenler = [];
-let karistiriliyor = false;
-
-function karistir() {
-  if(karistiriliyor) return;
-  karistiriliyor = true;
+// SİHİRLİ İMLEÇ
+const mCursor = document.getElementById('magic-cursor');
+document.addEventListener('mousemove', (e) => {
+  mCursor.style.left = e.clientX + 'px';
+  mCursor.style.top = e.clientY + 'px';
   
-  const container = document.getElementById("main-container");
-  container.classList.add("shuffling");
-  document.getElementById("card-title").innerText = "";
-  document.getElementById("status-msg").innerText = "Kartlar karıştırılıyor...";
+  if(Math.random() > 0.6) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.left = e.clientX + 'px';
+    s.style.top = e.clientY + 'px';
+    s.style.width = s.style.height = Math.random() * 6 + 'px';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1000);
+  }
+});
 
-  // Kartları kapat
-  document.querySelectorAll(".card").forEach(c => c.classList.remove("flip"));
+async function startRitual() {
+  if(isRitualActive) return;
+  isRitualActive = true;
+  
+  const cards = [document.getElementById('card-0'), document.getElementById('card-1'), document.getElementById('card-2')];
+  const resultText = document.getElementById('card-result');
+  const statusText = document.getElementById('status');
+  
+  resultText.style.opacity = 0;
+  statusText.innerText = "Enerji toplanıyor...";
+  cards.forEach(c => c.classList.remove('flip'));
 
-  setTimeout(() => {
-    secilenler = [];
-    let indexler = new Set();
-    
-    while(indexler.size < 3) {
-      indexler.add(Math.floor(Math.random() * kartHavuzu.length));
-    }
+  // --- GERÇEKÇİ KARIŞTIRMA ANİMASYONU ---
+  
+  // 1. Kartları ortada topla
+  cards.forEach((c, idx) => {
+    c.style.zIndex = 100;
+    c.style.transform = `translateX(${idx === 0 ? '240px' : idx === 2 ? '-240px' : '0px'}) rotateZ(0deg)`;
+  });
 
-    let i = 0;
-    indexler.forEach(idx => {
-      secilenler.push(kartHavuzu[idx]);
-      document.getElementById("c" + i).style.backgroundImage = `url(${kartHavuzu[idx].url})`;
-      i++;
+  await new Promise(r => setTimeout(r, 600));
+
+  // 2. Karmaşık hareketler (3 Tur)
+  for(let i=0; i<3; i++) {
+    cards.forEach((c, idx) => {
+      const randX = Math.random() * 100 - 50;
+      const randY = Math.random() * 40 - 20;
+      const randR = Math.random() * 20 - 10;
+      c.style.transform = `translate(${idx === 0 ? 240+randX : idx === 2 ? -240+randX : randX}px, ${randY}px) rotateZ(${randR}deg) scale(1.05)`;
     });
+    await new Promise(r => setTimeout(r, 400));
+  }
 
-    container.classList.remove("shuffling");
-    document.getElementById("status-msg").innerText = "Kaderini seçmek için bir karta tıkla.";
-    karistiriliyor = false;
-  }, 1000);
+  // 3. Kartları seç ve yerlerine gönder
+  activeDeck = [];
+  let used = new Set();
+  while(activeDeck.length < 3) {
+    let r = Math.floor(Math.random() * pool.length);
+    if(!used.has(r)) { activeDeck.push(pool[r]); used.add(r); }
+  }
+
+  activeDeck.forEach((card, i) => {
+    document.getElementById('img-'+i).style.backgroundImage = `url(${card.u})`;
+  });
+
+  cards.forEach(c => {
+    c.style.transform = `translate(0,0) rotateZ(0deg)`;
+  });
+
+  statusText.innerText = "Kaderin belirlendi. Bir kart seç...";
+  isRitualActive = false;
 }
 
-function flip(i) {
-  if(secilenler.length === 0 || karistiriliyor) return;
-  const c = document.querySelectorAll(".card")[i];
-  if(!c.classList.contains("flip")) {
-    c.classList.add("flip");
-    document.getElementById("card-title").innerText = secilenler[i].isim;
+function reveal(i) {
+  if(isRitualActive || activeDeck.length === 0) return;
+  const c = document.getElementById('card-'+i);
+  if(!c.classList.contains('flip')) {
+    c.classList.add('flip');
+    const res = document.getElementById('card-result');
+    res.innerText = activeDeck[i].n;
+    res.style.opacity = 1;
   }
 }
+
+// İlk açılış
+window.onload = startRitual;
 </script>
 
 </body>
