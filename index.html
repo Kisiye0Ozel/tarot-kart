@@ -2,106 +2,218 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Gerçek Tarot</title>
-
+<title>Mistik Tarot Açılımı</title>
 <style>
-body {
-  margin: 0;
-  background: radial-gradient(circle, #1a0033, #000);
-  color: white;
-  text-align: center;
-  font-family: Arial;
-}
+  :root {
+    --altin: #d4af37;
+    --mor: #2e004f;
+    --kart-genislik: 180px;
+    --kart-yukseklik: 300px;
+  }
 
-h1 {
-  margin-top: 20px;
-}
+  body {
+    margin: 0;
+    background: radial-gradient(circle at center, #1a0033 0%, #000 100%);
+    color: white;
+    font-family: 'Times New Roman', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
 
-#card {
-  width: 200px;
-  height: 320px;
-  margin: 30px auto;
-  background-size: cover;
-  border-radius: 12px;
-  box-shadow: 0 0 25px purple;
-  transition: transform 0.3s;
-}
+  h1 {
+    color: var(--altin);
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
 
-#card.active {
-  transform: scale(1.1);
-}
+  /* Bilgisayar ekranı için yan yana dizilim */
+  .container {
+    display: flex;
+    gap: 40px;
+    perspective: 1000px;
+  }
 
-button {
-  padding: 12px 25px;
-  font-size: 18px;
-  border-radius: 10px;
-  border: none;
-  background: gold;
-  cursor: pointer;
-}
+  .card {
+    width: var(--kart-genislik);
+    height: var(--kart-yukseklik);
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card.flip {
+    transform: rotateY(180deg);
+  }
+
+  .front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    backface-visibility: hidden;
+    border: 3px solid var(--altin);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* Kartın Kapalı Hali */
+  .front {
+    background: linear-gradient(135deg, #1a0033 0%, #4b0082 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .front::after {
+    content: "🔮";
+    font-size: 60px;
+    filter: drop-shadow(0 0 10px var(--altin));
+  }
+
+  /* Kartın Açık Hali (Resim) */
+  .back {
+    transform: rotateY(180deg);
+    background-size: cover;
+    background-position: center;
+    background-color: white;
+  }
+
+  .info-area {
+    margin-top: 40px;
+    height: 100px;
+    text-align: center;
+  }
+
+  #card-title {
+    font-size: 2rem;
+    color: var(--altin);
+    margin: 0;
+    text-shadow: 0 0 10px black;
+  }
+
+  button {
+    background: transparent;
+    color: var(--altin);
+    border: 2px solid var(--altin);
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+  }
+
+  button:hover {
+    background: var(--altin);
+    color: black;
+    box-shadow: 0 0 20px var(--altin);
+  }
+
+  .shuffling {
+    animation: shuffle-anim 0.5s ease-in-out infinite;
+  }
+
+  @keyframes shuffle-anim {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+    100% { transform: translateY(0); }
+  }
 </style>
 </head>
-
 <body>
 
-<h1>🔮 Kartını Seç</h1>
+<h1>BİLGELİK AÇILIMI</h1>
 
-<div id="card"></div>
+<div class="container" id="main-container">
+  <div class="card" onclick="flip(0)"><div class="front"></div><div class="back" id="c0"></div></div>
+  <div class="card" onclick="flip(1)"><div class="front"></div><div class="back" id="c1"></div></div>
+  <div class="card" onclick="flip(2)"><div class="front"></div><div class="back" id="c2"></div></div>
+</div>
 
-<button onclick="baslat()">Karıştır</button>
-<button onclick="durdur()">Kartı Aç</button>
+<div class="info-area">
+  <h2 id="card-title"></h2>
+  <p id="status-msg">Hazırsan kartları karıştır...</p>
+</div>
+
+<button onclick="karistir()">Kartları Karıştır</button>
 
 <script>
+const baseURL = "https://raw.githubusercontent.com/lenmorld/tarot-api/master/static/cards/";
+const kartHavuzu = [];
 
-// 🔥 GERÇEK TAROT KARTLARI (örnek, sen 78'e tamamlayabilirsin)
-const kartlar = [
-  {
-    isim: "The Fool",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg"
-  },
-  {
-    isim: "The Magician",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg"
-  },
-  {
-    isim: "The High Priestess",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg"
-  },
-  {
-    isim: "The Empress",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg"
-  },
-  {
-    isim: "The Emperor",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg"
-  },
-  {
-    isim: "The Sun",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/1/17/TheSun.jpg"
-  },
-  {
-    isim: "Death",
-    resim: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Death.jpg"
+// --- TÜRKÇE İSİMLER ---
+const majorTurkce = ["Joker", "Büyücü", "Azize", "İmparatoriçe", "İmparator", "Aziz", "Aşıklar", "Araba", "Güç", "Ermiş", "Kader Çarkı", "Adalet", "Asılan Adam", "Ölüm", "Denge", "Şeytan", "Yıkılan Kule", "Yıldız", "Ay", "Güneş", "Mahkeme", "Dünya"];
+const seriler = [{e: "c", t: "Kupalar"}, {e: "p", t: "Tılsımlar"}, {e: "s", t: "Kılıçlar"}, {e: "w", t: "Değnekler"}];
+const rakamlar = ["Ası", "İkilisi", "Üçlüsü", "Dörtlüsü", "Beşlisi", "Altılısı", "Yedilisi", "Sekizlisi", "Dokuzlusu", "Onlusu", "Prensi", "Şövalyesi", "Kraliçesi", "Kralı"];
+
+// Major kartları ekle
+majorTurkce.forEach((ad, i) => {
+  let dosya = i < 10 ? `m0${i}.jpg` : `m${i}.jpg`;
+  kartHavuzu.push({ isim: ad, url: baseURL + dosya });
+});
+
+// Minor kartları ekle
+seriler.forEach(seri => {
+  rakamlar.forEach((rAd, i) => {
+    let sayi = (i + 1) < 10 ? `0${i+1}` : (i + 1);
+    kartHavuzu.push({
+      isim: `${seri.t} ${rAd}`,
+      url: `${baseURL}${seri.e}${sayi}.jpg`
+    });
+  });
+});
+
+let secilenler = [];
+let karistiriliyor = false;
+
+function karistir() {
+  if(karistiriliyor) return;
+  karistiriliyor = true;
+  
+  const container = document.getElementById("main-container");
+  container.classList.add("shuffling");
+  document.getElementById("card-title").innerText = "";
+  document.getElementById("status-msg").innerText = "Kartlar karıştırılıyor...";
+
+  // Kartları kapat
+  document.querySelectorAll(".card").forEach(c => c.classList.remove("flip"));
+
+  setTimeout(() => {
+    secilenler = [];
+    let indexler = new Set();
+    
+    while(indexler.size < 3) {
+      indexler.add(Math.floor(Math.random() * kartHavuzu.length));
+    }
+
+    let i = 0;
+    indexler.forEach(idx => {
+      secilenler.push(kartHavuzu[idx]);
+      document.getElementById("c" + i).style.backgroundImage = `url(${kartHavuzu[idx].url})`;
+      i++;
+    });
+
+    container.classList.remove("shuffling");
+    document.getElementById("status-msg").innerText = "Kaderini seçmek için bir karta tıkla.";
+    karistiriliyor = false;
+  }, 1000);
+}
+
+function flip(i) {
+  if(secilenler.length === 0 || karistiriliyor) return;
+  const c = document.querySelectorAll(".card")[i];
+  if(!c.classList.contains("flip")) {
+    c.classList.add("flip");
+    document.getElementById("card-title").innerText = secilenler[i].isim;
   }
-];
-
-let interval;
-
-function baslat() {
-  interval = setInterval(() => {
-    const random = kartlar[Math.floor(Math.random() * kartlar.length)];
-    const cardDiv = document.getElementById("card");
-
-    cardDiv.style.backgroundImage = `url(${random.resim})`;
-    cardDiv.classList.add("active");
-
-  }, 100);
 }
-
-function durdur() {
-  clearInterval(interval);
-}
-
 </script>
 
 </body>
