@@ -2,44 +2,36 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Tarot Seçimi</title>
+<title>Gerçek Tarot</title>
 
 <style>
 body {
   margin: 0;
-  background: radial-gradient(circle, #0f0f2d, #000);
+  background: radial-gradient(circle, #1a0033, #000);
   color: white;
   text-align: center;
   font-family: Arial;
 }
 
 h1 {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
-.cards {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 40px;
+#card {
+  width: 200px;
+  height: 320px;
+  margin: 30px auto;
+  background-size: cover;
+  border-radius: 12px;
+  box-shadow: 0 0 25px purple;
+  transition: transform 0.3s;
 }
 
-.card {
-  width: 70px;
-  height: 110px;
-  border-radius: 8px;
-  background: linear-gradient(45deg, purple, black);
-  transition: transform 0.2s;
-}
-
-.card.active {
-  transform: scale(1.3);
-  box-shadow: 0 0 20px gold;
+#card.active {
+  transform: scale(1.1);
 }
 
 button {
-  margin-top: 30px;
   padding: 12px 25px;
   font-size: 18px;
   border-radius: 10px;
@@ -54,40 +46,62 @@ button {
 
 <h1>🔮 Kartını Seç</h1>
 
-<div class="cards" id="cards"></div>
+<div id="card"></div>
 
 <button onclick="baslat()">Karıştır</button>
-<button onclick="durdur()">Durdur</button>
+<button onclick="durdur()">Kartı Aç</button>
 
 <script>
-// 🔥 30 tane kart oluşturuyoruz
-const kartSayisi = 30;
-const container = document.getElementById("cards");
 
-for (let i = 0; i < kartSayisi; i++) {
-  const div = document.createElement("div");
-  div.classList.add("card");
-  container.appendChild(div);
-}
+// 🔥 GERÇEK TAROT KARTLARI (örnek, sen 78'e tamamlayabilirsin)
+const kartlar = [
+  {
+    isim: "The Fool",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg"
+  },
+  {
+    isim: "The Magician",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg"
+  },
+  {
+    isim: "The High Priestess",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg"
+  },
+  {
+    isim: "The Empress",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg"
+  },
+  {
+    isim: "The Emperor",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg"
+  },
+  {
+    isim: "The Sun",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/1/17/TheSun.jpg"
+  },
+  {
+    isim: "Death",
+    resim: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Death.jpg"
+  }
+];
 
 let interval;
-let aktifIndex = 0;
 
 function baslat() {
-  const kartlar = document.querySelectorAll(".card");
-
   interval = setInterval(() => {
-    kartlar.forEach(k => k.classList.remove("active"));
+    const random = kartlar[Math.floor(Math.random() * kartlar.length)];
+    const cardDiv = document.getElementById("card");
 
-    aktifIndex = Math.floor(Math.random() * kartlar.length);
-    kartlar[aktifIndex].classList.add("active");
+    cardDiv.style.backgroundImage = `url(${random.resim})`;
+    cardDiv.classList.add("active");
 
-  }, 80); // hız (daha düşük = daha hızlı)
+  }, 100);
 }
 
 function durdur() {
   clearInterval(interval);
 }
+
 </script>
 
 </body>
