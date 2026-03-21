@@ -6,18 +6,16 @@
 <title>Mistik Tarot</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root { --gold:#e8b84b; --gold2:#ffd700; --dim:rgba(255,255,255,0.42); }
+:root{--gold:#e8b84b;--gold2:#ffd700;--dim:rgba(255,255,255,0.42);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
   background:radial-gradient(ellipse at 50% 25%,#200045 0%,#080012 65%,#000008 100%);
-  min-height:100vh; color:#fff;
-  font-family:'Cinzel',serif;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  overflow:hidden; cursor:none; user-select:none;
+  min-height:100vh;color:#fff;font-family:'Cinzel',serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;cursor:none;user-select:none;
 }
 body::before{
-  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:
     radial-gradient(1px 1px at 7% 12%,rgba(255,255,255,.7) 0%,transparent 100%),
     radial-gradient(1px 1px at 19% 48%,rgba(255,255,255,.4) 0%,transparent 100%),
@@ -33,26 +31,27 @@ body::before{
     radial-gradient(1px 1px at 58% 84%,rgba(255,255,255,.4) 0%,transparent 100%);
 }
 body::after{
-  content:''; position:fixed;
-  width:700px; height:700px; border-radius:50%;
+  content:'';position:fixed;width:700px;height:700px;border-radius:50%;
   background:radial-gradient(circle,rgba(80,0,150,.18) 0%,transparent 70%);
-  top:50%; left:50%; transform:translate(-50%,-50%);
-  pointer-events:none; z-index:0;
-  animation:orb 5s ease-in-out infinite;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;z-index:0;animation:orb 5s ease-in-out infinite;
 }
 @keyframes orb{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.5}50%{transform:translate(-50%,-50%) scale(1.3);opacity:.9}}
 
+/* CURSOR */
 #cur{position:fixed;width:13px;height:13px;background:var(--gold2);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:screen;transform:translate(-50%,-50%);box-shadow:0 0 10px 3px rgba(255,215,0,.7);}
 .sp{position:fixed;width:4px;height:4px;background:var(--gold2);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);animation:spk .65s forwards ease-out;}
 @keyframes spk{0%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0);opacity:0}}
 
-.title-wrap{position:relative;z-index:10;text-align:center;margin-bottom:10px;}
+/* TITLE */
+.title-wrap{position:relative;z-index:10;text-align:center;margin-bottom:10px;transition:opacity .4s,transform .4s;}
 .title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.1rem,4.5vw,2rem);color:var(--gold);letter-spacing:10px;animation:glow 3s ease-in-out infinite;}
 @keyframes glow{0%,100%{text-shadow:0 0 15px rgba(232,184,75,.5),0 0 30px rgba(232,184,75,.2)}50%{text-shadow:0 0 30px rgba(232,184,75,1),0 0 70px rgba(232,184,75,.6),0 0 120px rgba(232,184,75,.3)}}
 .sub{font-size:.58rem;color:var(--dim);letter-spacing:6px;margin-top:5px;}
 
+/* SCENE */
 .scene{position:relative;z-index:10;width:500px;height:330px;display:flex;align-items:center;justify-content:center;}
-@media(max-width:540px){.scene{width:340px;height:250px;}}
+@media(max-width:540px){.scene{width:340px;height:260px;}}
 
 /* PILE */
 #pile{position:absolute;width:130px;height:210px;}
@@ -64,14 +63,55 @@ body::after{
 #spread{display:flex;gap:18px;align-items:center;opacity:0;pointer-events:none;transition:opacity .4s;}
 #spread.on{opacity:1;pointer-events:auto;}
 
-.cw{width:130px;height:210px;position:relative;transform-style:preserve-3d;cursor:pointer;transition:transform 1.3s cubic-bezier(.19,1,.22,1);animation:float 5s ease-in-out infinite;}
+/* CARD WRAP — normal state */
+.cw{
+  width:130px;height:210px;position:relative;
+  transform-style:preserve-3d;cursor:pointer;
+  transition:
+    transform 1.3s cubic-bezier(.19,1,.22,1),
+    opacity .5s ease,
+    filter .5s ease;
+  animation:float 5s ease-in-out infinite;
+  z-index:1;
+}
 .cw:nth-child(1){animation-delay:0s;}
 .cw:nth-child(2){animation-delay:.7s;}
 .cw:nth-child(3){animation-delay:1.4s;}
 @keyframes float{0%,100%{transform:translateY(0) rotateZ(-.5deg)}50%{transform:translateY(-12px) rotateZ(.5deg)}}
-.cw.flipped{transform:rotateY(180deg) scale(1.07) !important;animation:none;}
+
+/* Hover glow on back face */
 .cw:not(.flipped):hover .cbk{border-color:rgba(232,184,75,.9);box-shadow:0 0 25px rgba(232,184,75,.4),0 0 50px rgba(130,0,255,.3);}
 
+/* FLIPPED */
+.cw.flipped{transform:rotateY(180deg) scale(1.07) !important;animation:none;}
+
+/* ZOOMED — this card is the focused one */
+.cw.zoomed{
+  transform:rotateY(180deg) scale(2.3) !important;
+  animation:none !important;
+  z-index:100;
+  cursor:zoom-out;
+  filter:drop-shadow(0 0 30px rgba(232,184,75,.7)) drop-shadow(0 0 60px rgba(160,0,255,.4));
+}
+
+/* OTHER cards when one is zoomed */
+.cw.dimmed{
+  opacity:0 !important;
+  pointer-events:none !important;
+  animation:none !important;
+  filter:none !important;
+}
+
+/* ZOOM HINT (appears after flip) */
+.zoom-hint{
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  font-size:.48rem;color:rgba(232,184,75,.55);letter-spacing:3px;white-space:nowrap;
+  opacity:0;transition:opacity .4s;pointer-events:none;
+}
+.cw.flipped .zoom-hint{opacity:1;}
+.cw.zoomed .zoom-hint{opacity:0;}
+
+/* CARD FACES */
 .cbk,.cfr{position:absolute;inset:0;border-radius:11px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1.5px solid rgba(232,184,75,.45);overflow:hidden;transition:box-shadow .3s,border-color .3s;}
 .cbk{background:linear-gradient(145deg,#1a003a 0%,#0c0018 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
 .cbk::before{content:'';position:absolute;inset:7px;border:1px solid rgba(232,184,75,.2);border-radius:7px;}
@@ -84,20 +124,66 @@ body::after{
 .cfr{transform:rotateY(180deg);background:#05000f;}
 .cfr svg{width:100%;height:100%;}
 
-.info{position:relative;z-index:10;text-align:center;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;margin:8px 0;}
+/* CLOSE BUTTON (shown when zoomed) */
+#close-btn{
+  position:fixed;top:18px;right:20px;
+  z-index:200;
+  background:transparent;
+  color:var(--gold);
+  border:1.5px solid rgba(232,184,75,.5);
+  width:40px;height:40px;
+  border-radius:50%;
+  font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s,background .25s,box-shadow .25s;
+  font-family:'Cinzel',serif;
+}
+#close-btn.show{opacity:1;pointer-events:auto;}
+#close-btn:hover{background:rgba(232,184,75,.15);box-shadow:0 0 20px rgba(232,184,75,.4);}
+
+/* INFO */
+.info{position:relative;z-index:10;text-align:center;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;margin:8px 0;transition:opacity .4s,transform .4s;}
 #cname{font-family:'Cinzel Decorative',serif;font-size:clamp(.9rem,3.5vw,1.5rem);color:var(--gold);text-shadow:0 0 25px rgba(232,184,75,.8);letter-spacing:4px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;}
 #cname.show{opacity:1;transform:translateY(0);}
 #msg{font-size:.6rem;color:var(--dim);letter-spacing:4px;transition:opacity .25s;}
 
-.bwrap{position:relative;z-index:10;}
+/* ZOOM CARD NAME (shown below when zoomed) */
+#zoom-label{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  z-index:200;
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1rem,4vw,1.6rem);
+  color:var(--gold);
+  text-shadow:0 0 30px rgba(232,184,75,.9);
+  letter-spacing:6px;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+  white-space:nowrap;
+}
+#zoom-label.show{opacity:1;}
+
+/* BUTTON */
+.bwrap{position:relative;z-index:10;transition:opacity .4s;}
 button{background:transparent;color:var(--gold);border:1.5px solid rgba(232,184,75,.6);padding:13px 36px;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:5px;cursor:pointer;transition:all .35s;position:relative;overflow:hidden;}
 button::before{content:'';position:absolute;inset:-1px;background:var(--gold);z-index:-1;transform:scaleX(0);transform-origin:left;transition:transform .35s ease;}
 button:hover::before{transform:scaleX(1);}
 button:hover{color:#0a0015;box-shadow:0 0 35px rgba(232,184,75,.5);}
 button:active{transform:scale(.97);}
 
+/* PARTICLES */
 .fp{position:fixed;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);animation:fpb .8s forwards ease-out;}
 @keyframes fpb{0%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0);opacity:0}}
+
+/* OVERLAY (darkens bg when zoomed) */
+#overlay{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(0,0,0,.7);
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+}
+#overlay.show{opacity:1;pointer-events:auto;}
 
 @media(max-width:540px){
   .cw{width:95px;height:153px;}
@@ -106,13 +192,17 @@ button:active{transform:scale(.97);}
   #pile{width:95px;height:153px;}
   .pc{border-radius:9px;}
   .bs{font-size:28px;}
+  .cw.zoomed{transform:rotateY(180deg) scale(1.9) !important;}
 }
 </style>
 </head>
 <body>
 <div id="cur"></div>
+<div id="overlay" onclick="unzoom()"></div>
+<button id="close-btn" onclick="unzoom()">✕</button>
+<div id="zoom-label"></div>
 
-<div class="title-wrap">
+<div class="title-wrap" id="titlewrap">
   <div class="title">MİSTİK TAROT</div>
   <div class="sub">GEÇMİŞ &nbsp;·&nbsp; ŞİMDİ &nbsp;·&nbsp; GELECEK</div>
 </div>
@@ -124,31 +214,34 @@ button:active{transform:scale(.97);}
     <div class="pc" id="p0"></div>
   </div>
   <div id="spread">
-    <div class="cw" id="cw0" onclick="flip(0)">
+    <div class="cw" id="cw0" onclick="cardClick(0)">
       <div class="cbk"><span class="bs">☽</span><span class="bn">I</span></div>
       <div class="cfr" id="cf0"></div>
+      <div class="zoom-hint">BÜYÜT ✦</div>
     </div>
-    <div class="cw" id="cw1" onclick="flip(1)">
+    <div class="cw" id="cw1" onclick="cardClick(1)">
       <div class="cbk"><span class="bs">☀</span><span class="bn">II</span></div>
       <div class="cfr" id="cf1"></div>
+      <div class="zoom-hint">BÜYÜT ✦</div>
     </div>
-    <div class="cw" id="cw2" onclick="flip(2)">
+    <div class="cw" id="cw2" onclick="cardClick(2)">
       <div class="cbk"><span class="bs">✦</span><span class="bn">III</span></div>
       <div class="cfr" id="cf2"></div>
+      <div class="zoom-hint">BÜYÜT ✦</div>
     </div>
   </div>
 </div>
 
-<div class="info">
+<div class="info" id="infobox">
   <div id="cname"></div>
   <div id="msg">Gözlerini kapat ve odaklan...</div>
 </div>
-<div class="bwrap">
+<div class="bwrap" id="btnwrap">
   <button onclick="shuffle()">✦ &nbsp; KADERİ KARIŞTIR &nbsp; ✦</button>
 </div>
 
 <script>
-/* CURSOR */
+/* ── CURSOR ── */
 const $cur=document.getElementById('cur');
 document.addEventListener('mousemove',e=>{
   $cur.style.left=e.clientX+'px'; $cur.style.top=e.clientY+'px';
@@ -160,49 +253,38 @@ document.addEventListener('mousemove',e=>{
   }
 });
 
-/* ─── SVG CARD ART ─── */
-// Each card returns an SVG string 130×210
-function cardSVG(card) {
-  const {color, symbol, title, lines, bg1, bg2} = card;
-  const linesHTML = lines.map((l,i)=>`<text x="65" y="${138+i*14}" text-anchor="middle" font-size="8" fill="${color}" opacity=".7" font-family="serif">${l}</text>`).join('');
+/* ── SVG CARD ART ── */
+function cardSVG(card){
+  const {color,symbol,title,lines,bg1,bg2,id,roman}=card;
+  const ll=lines.map((l,i)=>`<text x="65" y="${140+i*14}" text-anchor="middle" font-size="8" fill="${color}" opacity=".65" font-family="serif">${l}</text>`).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 210">
   <defs>
-    <radialGradient id="bg${card.id}" cx="50%" cy="40%" r="70%">
+    <radialGradient id="bg${id}" cx="50%" cy="40%" r="70%">
       <stop offset="0%" stop-color="${bg1}"/>
       <stop offset="100%" stop-color="${bg2}"/>
     </radialGradient>
-    <radialGradient id="glow${card.id}" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="${color}" stop-opacity=".4"/>
+    <radialGradient id="gl${id}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="${color}" stop-opacity=".38"/>
       <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <!-- BG -->
-  <rect width="130" height="210" rx="9" fill="url(#bg${card.id})"/>
-  <!-- Glow circle -->
-  <ellipse cx="65" cy="90" rx="50" ry="50" fill="url(#glow${card.id})"/>
-  <!-- Border -->
-  <rect x="5" y="5" width="120" height="200" rx="7" fill="none" stroke="${color}" stroke-width="1" opacity=".5"/>
-  <rect x="10" y="10" width="110" height="190" rx="5" fill="none" stroke="${color}" stroke-width=".5" opacity=".25"/>
-  <!-- Corner Roman -->
-  <text x="16" y="25" font-size="9" fill="${color}" opacity=".6" font-family="serif">${card.roman}</text>
-  <text x="114" y="195" font-size="9" fill="${color}" opacity=".6" font-family="serif" text-anchor="end">${card.roman}</text>
-  <!-- Main symbol -->
-  <text x="65" y="110" text-anchor="middle" font-size="52" fill="${color}" opacity=".9">${symbol}</text>
-  <!-- Decorative dots -->
-  ${[0,1,2,3].map(i=>`<circle cx="${20+i*30}" cy="35" r="1.5" fill="${color}" opacity=".3"/>`).join('')}
-  ${[0,1,2,3].map(i=>`<circle cx="${20+i*30}" cy="178" r="1.5" fill="${color}" opacity=".3"/>`).join('')}
-  <!-- Title -->
-  <text x="65" y="165" text-anchor="middle" font-size="8.5" fill="${color}" font-family="serif" letter-spacing="1" font-weight="bold">${title}</text>
-  <!-- Subtitle lines -->
-  ${linesHTML}
-  <!-- Stars -->
-  <text x="65" y="194" text-anchor="middle" font-size="7" fill="${color}" opacity=".4">✦ ✦ ✦</text>
+  <rect width="130" height="210" rx="9" fill="url(#bg${id})"/>
+  <ellipse cx="65" cy="88" rx="48" ry="48" fill="url(#gl${id})"/>
+  <rect x="5" y="5" width="120" height="200" rx="7" fill="none" stroke="${color}" stroke-width="1" opacity=".45"/>
+  <rect x="10" y="10" width="110" height="190" rx="5" fill="none" stroke="${color}" stroke-width=".5" opacity=".22"/>
+  <text x="15" y="26" font-size="9" fill="${color}" opacity=".55" font-family="serif">${roman}</text>
+  <text x="115" y="198" font-size="9" fill="${color}" opacity=".55" font-family="serif" text-anchor="end">${roman}</text>
+  ${[0,1,2,3].map(i=>`<circle cx="${18+i*32}" cy="36" r="1.5" fill="${color}" opacity=".28"/>`).join('')}
+  ${[0,1,2,3].map(i=>`<circle cx="${18+i*32}" cy="176" r="1.5" fill="${color}" opacity=".28"/>`).join('')}
+  <text x="65" y="108" text-anchor="middle" font-size="50" fill="${color}" opacity=".9">${symbol}</text>
+  <text x="65" y="166" text-anchor="middle" font-size="8.5" fill="${color}" font-family="serif" letter-spacing="1" font-weight="bold">${title}</text>
+  ${ll}
+  <text x="65" y="196" text-anchor="middle" font-size="7" fill="${color}" opacity=".35">✦ ✦ ✦</text>
 </svg>`;
 }
 
-/* ─── DECK DATA ─── */
-// 78 cards, each with a visual archetype
-const PALETTE = {
+/* ── DECK DATA ── */
+const PAL={
   gold:   {color:'#e8c84b',bg1:'#1a0a00',bg2:'#0c0400'},
   silver: {color:'#c8d8e8',bg1:'#001428',bg2:'#000810'},
   crimson:{color:'#e85050',bg1:'#200010',bg2:'#0c0008'},
@@ -213,79 +295,61 @@ const PALETTE = {
   rose:   {color:'#f870a0',bg1:'#180010',bg2:'#0c0008'},
   teal:   {color:'#40d8c8',bg1:'#001818',bg2:'#000c0c'},
 };
-
-const ROMAN=['0','I','II','III','IV','V','VI','VII','VIII','IX','X',
-             'XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
-
-const MAJOR = [
-  {n:"Deli",      sym:'🌟', pal:'gold',   lines:['Özgürlük','Macera']},
-  {n:"Büyücü",    sym:'⚗',  pal:'violet', lines:['İrade','Güç']},
-  {n:"Yüce Rahibe",sym:'☽', pal:'silver', lines:['Gizem','Sezgi']},
+const ROM=['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+const MAJOR=[
+  {n:"Deli",sym:'🌟',pal:'gold',lines:['Özgürlük','Macera']},
+  {n:"Büyücü",sym:'⚗',pal:'violet',lines:['İrade','Güç']},
+  {n:"Yüce Rahibe",sym:'☽',pal:'silver',lines:['Gizem','Sezgi']},
   {n:"İmparatoriçe",sym:'♀',pal:'emerald',lines:['Bereket','Doğa']},
-  {n:"İmparator", sym:'♦',  pal:'crimson',lines:['Otorite','Düzen']},
-  {n:"Hiyerofant",sym:'✙',  pal:'gold',   lines:['Gelenek','Bilgelik']},
-  {n:"Âşıklar",   sym:'♡',  pal:'rose',   lines:['Bağlantı','Seçim']},
-  {n:"Savaş Arabası",sym:'⚔',pal:'azure', lines:['Zafer','Kontrol']},
-  {n:"Güç",       sym:'∞',  pal:'amber',  lines:['Cesaret','Sabır']},
-  {n:"Ermiş",     sym:'🔦', pal:'silver', lines:['Yalnızlık','Rehberlik']},
-  {n:"Kader Çarkı",sym:'⊕', pal:'gold',   lines:['Döngü','Şans']},
-  {n:"Adalet",    sym:'⚖',  pal:'azure',  lines:['Denge','Hakikat']},
-  {n:"Asılan Adam",sym:'⊻', pal:'teal',   lines:['Fedakarlık','Duraklama']},
-  {n:"Ölüm",      sym:'✗',  pal:'violet', lines:['Dönüşüm','Son']},
-  {n:"Denge",     sym:'🜂',  pal:'silver', lines:['Uyum','Sabır']},
-  {n:"Şeytan",    sym:'Ψ',  pal:'crimson',lines:['Bağ','Gölge']},
-  {n:"Yıkılan Kule",sym:'⚡',pal:'amber', lines:['Yıkım','Uyanış']},
-  {n:"Yıldız",    sym:'★',  pal:'azure',  lines:['Umut','Ilham']},
-  {n:"Ay",        sym:'☾',  pal:'silver', lines:['Yanılsama','Korku']},
-  {n:"Güneş",     sym:'☀',  pal:'gold',   lines:['Neşe','Başarı']},
-  {n:"Yargılama", sym:'🎺', pal:'violet', lines:['Uyanış','Çağrı']},
-  {n:"Dünya",     sym:'⊕',  pal:'emerald',lines:['Tamamlanma','Bütünlük']},
+  {n:"İmparator",sym:'♦',pal:'crimson',lines:['Otorite','Düzen']},
+  {n:"Hiyerofant",sym:'✙',pal:'gold',lines:['Gelenek','Bilgelik']},
+  {n:"Âşıklar",sym:'♡',pal:'rose',lines:['Bağlantı','Seçim']},
+  {n:"Savaş Arabası",sym:'⚔',pal:'azure',lines:['Zafer','Kontrol']},
+  {n:"Güç",sym:'∞',pal:'amber',lines:['Cesaret','Sabır']},
+  {n:"Ermiş",sym:'⚴',pal:'silver',lines:['Yalnızlık','Rehberlik']},
+  {n:"Kader Çarkı",sym:'⊕',pal:'gold',lines:['Döngü','Şans']},
+  {n:"Adalet",sym:'⚖',pal:'azure',lines:['Denge','Hakikat']},
+  {n:"Asılan Adam",sym:'⊻',pal:'teal',lines:['Fedakarlık','Duraklama']},
+  {n:"Ölüm",sym:'✗',pal:'violet',lines:['Dönüşüm','Son']},
+  {n:"Denge",sym:'☯',pal:'silver',lines:['Uyum','Sabır']},
+  {n:"Şeytan",sym:'Ψ',pal:'crimson',lines:['Bağ','Gölge']},
+  {n:"Yıkılan Kule",sym:'⚡',pal:'amber',lines:['Yıkım','Uyanış']},
+  {n:"Yıldız",sym:'★',pal:'azure',lines:['Umut','İlham']},
+  {n:"Ay",sym:'☾',pal:'silver',lines:['Yanılsama','Korku']},
+  {n:"Güneş",sym:'☀',pal:'gold',lines:['Neşe','Başarı']},
+  {n:"Yargılama",sym:'♩',pal:'violet',lines:['Uyanış','Çağrı']},
+  {n:"Dünya",sym:'⊙',pal:'emerald',lines:['Tamamlanma','Bütünlük']},
 ];
-
-const SUITS = [
-  {t:'Kupa',   sym:'♡', pal:'rose',   e:'c'},
-  {t:'Tılsım', sym:'★', pal:'gold',   e:'p'},
-  {t:'Kılıç',  sym:'⚔', pal:'azure',  e:'s'},
-  {t:'Değnek', sym:'🌿',pal:'emerald',e:'w'},
+const SUITS=[
+  {t:'Kupa',sym:'♡',pal:'rose',e:'c'},
+  {t:'Tılsım',sym:'★',pal:'gold',e:'p'},
+  {t:'Kılıç',sym:'⚔',pal:'azure',e:'s'},
+  {t:'Değnek',sym:'✦',pal:'emerald',e:'w'},
 ];
-const RANKS = ['Ası','İkilisi','Üçlüsü','Dörtlüsü','Beşlisi','Altılısı',
-               'Yedilisi','Sekizlisi','Dokuzlusu','Onlusu','Ulağı','Şövalyesi','Kraliçesi','Kralı'];
+const RANKS=['Ası','İkilisi','Üçlüsü','Dörtlüsü','Beşlisi','Altılısı','Yedilisi','Sekizlisi','Dokuzlusu','Onlusu','Ulağı','Şövalyesi','Kraliçesi','Kralı'];
 
-let DECK = [];
-let idCount = 0;
+let DECK=[],idc=0;
+MAJOR.forEach((m,i)=>{const p=PAL[m.pal];DECK.push({name:m.n,svg:cardSVG({id:idc++,color:p.color,symbol:m.sym,title:m.n,lines:m.lines,bg1:p.bg1,bg2:p.bg2,roman:ROM[i]})});});
+SUITS.forEach(s=>RANKS.forEach((r,i)=>{const p=PAL[s.pal];const rv=i<10?String(i+1):['U','Ş','K','KR'][i-10];DECK.push({name:`${s.t} ${r}`,svg:cardSVG({id:idc++,color:p.color,symbol:s.sym,title:`${s.t} ${r}`,lines:[s.t],bg1:p.bg1,bg2:p.bg2,roman:rv})});}));
 
-MAJOR.forEach((m,i)=>{
-  const p = PALETTE[m.pal];
-  DECK.push(cardSVG({id:idCount++, color:p.color, symbol:m.sym, title:m.n,
-    lines:m.lines, bg1:p.bg1, bg2:p.bg2, roman:ROMAN[i]}));
-});
+/* ── STATE ── */
+let selected=[],flipped=[false,false,false],busy=false,zoomedIdx=-1;
 
-SUITS.forEach(s=>{
-  RANKS.forEach((r,i)=>{
-    const p = PALETTE[s.pal];
-    const rv = i<10 ? String(i+1) : ['U','Ş','K','KR'][i-10];
-    DECK.push(cardSVG({id:idCount++, color:p.color, symbol:s.sym,
-      title:`${s.t} ${r}`, lines:[s.t], bg1:p.bg1, bg2:p.bg2, roman:rv}));
-  });
-});
-
-/* STATE */
-let selected=[], flipped=[false,false,false], busy=false;
-
-/* SHUFFLE */
+/* ── SHUFFLE ── */
 function shuffle(){
   if(busy)return; busy=true;
+  // Unzoom first if needed
+  if(zoomedIdx!==-1) unzoom(true);
+
   const spread=document.getElementById('spread');
   const pile=document.getElementById('pile');
   const cards=pile.querySelectorAll('.pc');
-
   document.getElementById('cname').className='';
   document.getElementById('cname').textContent='';
   setMsg('Ruhlar fısıldıyor...');
   flipped=[false,false,false];
   spread.classList.remove('on');
   pile.style.opacity='1'; pile.style.pointerEvents='none';
-
   cards.forEach((c,i)=>{
     const dx=(i-2)*2,dy=(i-2)*1.5,rot=(i-2)*1.5;
     c.style.transition='none';
@@ -294,11 +358,11 @@ function shuffle(){
 
   let round=0;
   function riffle(){
-    if(round>=5){finish();return;}
+    if(round>=5){done();return;}
     cards.forEach((c,i)=>{
       setTimeout(()=>{
         const side=(i%2===0)?-1:1;
-        const sx=42+Math.random()*18, ly=-32-Math.random()*12, rot=side*(7+Math.random()*8);
+        const sx=42+Math.random()*18,ly=-32-Math.random()*12,rot=side*(7+Math.random()*8);
         c.style.transition=`transform .2s cubic-bezier(.34,1.56,.64,1)`;
         c.style.transform=`translateX(${side*sx}px) translateY(${ly}px) rotate(${rot}deg)`;
         setTimeout(()=>{
@@ -313,23 +377,16 @@ function shuffle(){
   }
   riffle();
 
-  function finish(){
+  function done(){
     selected=[];
     const used=new Set();
-    while(selected.length<3){
-      const r=Math.floor(Math.random()*DECK.length);
-      if(!used.has(r)){selected.push({svg:DECK[r],idx:r});used.add(r);}
+    while(selected.length<3){const r=Math.floor(Math.random()*DECK.length);if(!used.has(r)){selected.push(DECK[r]);used.add(r);}}
+    for(let i=0;i<3;i++){
+      document.getElementById('cf'+i).innerHTML=selected[i].svg;
+      document.getElementById('cw'+i).classList.remove('flipped','zoomed','dimmed');
     }
-    // Figure out the card name from SVG title text
-    selected.forEach((s,i)=>{
-      const m=s.svg.match(/font-weight="bold">([^<]+)<\/text>/);
-      s.name = m ? m[1] : '?';
-      document.getElementById('cf'+i).innerHTML=s.svg;
-      document.getElementById('cw'+i).classList.remove('flipped');
-    });
     setTimeout(()=>{
-      pile.style.transition='opacity .3s';
-      pile.style.opacity='0';
+      pile.style.transition='opacity .3s'; pile.style.opacity='0';
       setTimeout(()=>{
         pile.style.opacity='1'; pile.style.pointerEvents='';
         cards.forEach((c,i)=>{
@@ -345,16 +402,36 @@ function shuffle(){
   }
 }
 
-/* FLIP */
-function flip(i){
-  if(busy||selected.length===0||flipped[i])return;
+/* ── CARD CLICK ── */
+function cardClick(i){
+  if(busy)return;
+
+  // If something is already zoomed
+  if(zoomedIdx!==-1){
+    if(zoomedIdx===i){ unzoom(); } // click zoomed card → shrink
+    return;
+  }
+
+  // Not yet flipped → flip it
+  if(!flipped[i]){
+    flipCard(i);
+    return;
+  }
+
+  // Already flipped → zoom it
+  zoomCard(i);
+}
+
+/* ── FLIP ── */
+function flipCard(i){
+  if(selected.length===0)return;
   flipped[i]=true;
   const cw=document.getElementById('cw'+i);
   const rect=cw.getBoundingClientRect();
-  const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
   for(let p=0;p<14;p++){
     const el=document.createElement('div'); el.className='fp';
-    const ang=(p/14)*Math.PI*2, dist=55+Math.random()*70;
+    const ang=(p/14)*Math.PI*2,dist=55+Math.random()*70;
     const cols=['#ffd700','#ffffff','#cc88ff','#e8b84b'];
     el.style.cssText=`left:${cx}px;top:${cy}px;--dx:${Math.cos(ang)*dist}px;--dy:${Math.sin(ang)*dist}px;background:${cols[p%cols.length]};animation-duration:${.5+Math.random()*.4}s`;
     document.body.appendChild(el); setTimeout(()=>el.remove(),900);
@@ -364,7 +441,53 @@ function flip(i){
   nm.classList.remove('show'); nm.textContent=selected[i].name;
   requestAnimationFrame(()=>requestAnimationFrame(()=>nm.classList.add('show')));
   const done=flipped.every(Boolean);
-  setMsg(done?'Yıldızlar konuştu...':(flipped.filter(Boolean).length===1?'İki kart daha...':'Son kart...'));
+  setMsg(done?'Açmak için karta tekrar tıkla ✦':(flipped.filter(Boolean).length===1?'İki kart daha...':'Son kart...'));
+}
+
+/* ── ZOOM ── */
+function zoomCard(i){
+  zoomedIdx=i;
+  // Dim all other cards
+  for(let j=0;j<3;j++){
+    if(j!==i) document.getElementById('cw'+j).classList.add('dimmed');
+  }
+  document.getElementById('cw'+i).classList.add('zoomed');
+
+  // Show overlay & close btn
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('close-btn').classList.add('show');
+
+  // Show zoom label
+  const zl=document.getElementById('zoom-label');
+  zl.textContent=selected[i].name;
+  zl.classList.add('show');
+
+  // Hide title, info, button
+  document.getElementById('titlewrap').style.opacity='0';
+  document.getElementById('titlewrap').style.transform='translateY(-20px)';
+  document.getElementById('infobox').style.opacity='0';
+  document.getElementById('btnwrap').style.opacity='0';
+}
+
+/* ── UNZOOM ── */
+function unzoom(silent){
+  if(zoomedIdx===-1 && !silent)return;
+  const i=zoomedIdx;
+  zoomedIdx=-1;
+
+  if(i!==-1){
+    document.getElementById('cw'+i).classList.remove('zoomed');
+    for(let j=0;j<3;j++) document.getElementById('cw'+j).classList.remove('dimmed');
+  }
+
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('close-btn').classList.remove('show');
+  document.getElementById('zoom-label').classList.remove('show');
+
+  document.getElementById('titlewrap').style.opacity='1';
+  document.getElementById('titlewrap').style.transform='';
+  document.getElementById('infobox').style.opacity='1';
+  document.getElementById('btnwrap').style.opacity='1';
 }
 
 function setMsg(t){
