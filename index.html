@@ -85,14 +85,33 @@ body::after{
 /* FLIPPED */
 .cw.flipped{transform:rotateY(180deg) scale(1.07) !important;animation:none;}
 
-/* ZOOMED — this card is the focused one */
+/* ZOOMED — hide the rotating wrapper entirely, front face goes fixed */
 .cw.zoomed{
-  transform:rotateY(180deg) scale(2.3) !important;
+  opacity:0 !important;
+  pointer-events:none !important;
   animation:none !important;
-  z-index:100;
-  cursor:zoom-out;
-  filter:drop-shadow(0 0 30px rgba(232,184,75,.7)) drop-shadow(0 0 60px rgba(160,0,255,.4));
 }
+
+/* The zoomed front face teleports to center of screen */
+#zoom-card{
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:170px; height:274px;
+  border-radius:14px;
+  border:1.5px solid rgba(232,184,75,.7);
+  overflow:hidden;
+  z-index:150;
+  opacity:0; pointer-events:none;
+  transition:opacity .35s, transform .45s cubic-bezier(.19,1,.22,1);
+  cursor:zoom-out;
+  box-shadow:0 0 40px rgba(232,184,75,.5), 0 0 80px rgba(160,0,255,.35);
+}
+#zoom-card.show{
+  opacity:1; pointer-events:auto;
+  transform:translate(-50%,-50%) scale(1);
+}
+#zoom-card svg{ width:100%; height:100%; display:block; }
 
 /* OTHER cards when one is zoomed */
 .cw.dimmed{
@@ -192,7 +211,7 @@ button:active{transform:scale(.97);}
   #pile{width:95px;height:153px;}
   .pc{border-radius:9px;}
   .bs{font-size:28px;}
-  .cw.zoomed{transform:rotateY(180deg) scale(1.9) !important;}
+  #zoom-card{width:130px;height:210px;}
 }
 </style>
 </head>
@@ -201,6 +220,7 @@ button:active{transform:scale(.97);}
 <div id="overlay" onclick="unzoom()"></div>
 <button id="close-btn" onclick="unzoom()">✕</button>
 <div id="zoom-label"></div>
+<div id="zoom-card" onclick="unzoom()"></div>
 
 <div class="title-wrap" id="titlewrap">
   <div class="title">MİSTİK TAROT</div>
@@ -453,6 +473,11 @@ function zoomCard(i){
   }
   document.getElementById('cw'+i).classList.add('zoomed');
 
+  // Copy SVG into zoom-card panel
+  const zc=document.getElementById('zoom-card');
+  zc.innerHTML=selected[i].svg;
+  zc.classList.add('show');
+
   // Show overlay & close btn
   document.getElementById('overlay').classList.add('show');
   document.getElementById('close-btn').classList.add('show');
@@ -479,6 +504,9 @@ function unzoom(silent){
     document.getElementById('cw'+i).classList.remove('zoomed');
     for(let j=0;j<3;j++) document.getElementById('cw'+j).classList.remove('dimmed');
   }
+
+  // Hide zoom-card panel
+  document.getElementById('zoom-card').classList.remove('show');
 
   document.getElementById('overlay').classList.remove('show');
   document.getElementById('close-btn').classList.remove('show');
