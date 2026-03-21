@@ -28,6 +28,7 @@ body {
   user-select: none;
 }
 
+/* Yıldız Arka Planı */
 body::before {
   content: '';
   position: fixed;
@@ -38,17 +39,12 @@ body::before {
     radial-gradient(1px 1px at 35% 82%, rgba(255,255,255,0.5) 0%, transparent 100%),
     radial-gradient(1px 1px at 55% 12%, rgba(255,255,255,0.6) 0%, transparent 100%),
     radial-gradient(1px 1px at 68% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 78% 28%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 75%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 47% 38%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 93% 42%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 30% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 72% 90%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    radial-gradient(1px 1px at 90% 75%, rgba(255,255,255,0.6) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
 }
 
+/* Aura Efekti */
 body::after {
   content: '';
   position: fixed;
@@ -97,11 +93,7 @@ body::after {
 }
 
 /* TITLE */
-.title-wrap {
-  position: relative; z-index: 10;
-  text-align: center; margin-bottom: 12px;
-}
-
+.title-wrap { position: relative; z-index: 10; text-align: center; margin-bottom: 12px; }
 .title {
   font-family: 'Cinzel Decorative', serif;
   font-size: clamp(1.1rem, 4.5vw, 2rem);
@@ -111,16 +103,11 @@ body::after {
 }
 
 @keyframes glow {
-  0%,100% { text-shadow: 0 0 15px rgba(232,184,75,0.5), 0 0 30px rgba(232,184,75,0.2); }
-  50% { text-shadow: 0 0 30px rgba(232,184,75,1), 0 0 70px rgba(232,184,75,0.6), 0 0 120px rgba(232,184,75,0.3); }
+  0%,100% { text-shadow: 0 0 15px rgba(232,184,75,0.5); }
+  50% { text-shadow: 0 0 30px rgba(232,184,75,1), 0 0 70px rgba(232,184,75,0.4); }
 }
 
-.subtitle {
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  letter-spacing: 6px;
-  margin-top: 5px;
-}
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 6px; margin-top: 5px; }
 
 /* SCENE */
 .scene {
@@ -129,262 +116,79 @@ body::after {
   display: flex; align-items: center; justify-content: center;
 }
 
-@media (max-width: 540px) { .scene { width: 340px; height: 240px; } }
-
-/* PILE */
-#pile {
-  position: absolute;
-  width: 130px; height: 210px;
-  transition: opacity 0.3s;
-}
-
+/* PILE (Deste) */
+#pile { position: absolute; width: 130px; height: 210px; transition: opacity 0.3s; }
 .pc {
-  position: absolute;
-  inset: 0;
-  border-radius: 11px;
+  position: absolute; inset: 0; border-radius: 11px;
   border: 1.5px solid rgba(232,184,75,0.35);
   background: linear-gradient(145deg, #1a003a 0%, #0c0018 100%);
   transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
-  will-change: transform;
 }
 
-.pc::before {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(232,184,75,0.18);
-  border-radius: 7px;
-  background: repeating-linear-gradient(45deg, transparent, transparent 7px, rgba(232,184,75,0.04) 7px, rgba(232,184,75,0.04) 8px);
-}
-
-.pc::after {
-  content: '✦';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  font-size: 44px;
-  color: rgba(232,184,75,0.12);
-}
-
-/* SPREAD */
-#spread {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s;
-}
-
+/* SPREAD (Açılan Kartlar) */
+#spread { display: flex; gap: 18px; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
 #spread.on { opacity: 1; pointer-events: auto; }
 
-/* CARD WRAP */
 .cw {
-  width: 130px; height: 210px;
-  position: relative;
-  transform-style: preserve-3d;
-  cursor: pointer;
+  width: 130px; height: 210px; position: relative;
+  transform-style: preserve-3d; cursor: pointer;
   transition: transform 1.3s cubic-bezier(0.19,1,0.22,1);
   animation: float 5s ease-in-out infinite;
 }
 
-.cw:nth-child(1) { animation-delay: 0s; }
-.cw:nth-child(2) { animation-delay: 0.7s; }
-.cw:nth-child(3) { animation-delay: 1.4s; }
-
 @keyframes float {
-  0%,100% { transform: translateY(0) rotateZ(-0.5deg); }
-  50% { transform: translateY(-12px) rotateZ(0.5deg); }
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 
 .cw.flipped { transform: rotateY(180deg) scale(1.07) !important; animation: none; }
 
-.cw:not(.flipped):hover .cb {
-  border-color: rgba(232,184,75,0.9);
-  box-shadow: 0 0 25px rgba(232,184,75,0.4), 0 0 50px rgba(130,0,255,0.3);
-}
-
 .cf, .cb {
-  position: absolute;
-  inset: 0;
-  border-radius: 11px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border: 1.5px solid rgba(232,184,75,0.45);
-  overflow: hidden;
-  transition: box-shadow 0.3s, border-color 0.3s;
+  position: absolute; inset: 0; border-radius: 11px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border: 1.5px solid rgba(232,184,75,0.45); overflow: hidden;
 }
 
 .cb {
   background: linear-gradient(145deg, #1a003a 0%, #0c0018 100%);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 
-.cb::before {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(232,184,75,0.2);
-  border-radius: 7px;
-}
-
-.cb::after {
-  content: '';
-  position: absolute;
-  inset: 11px;
-  border-radius: 5px;
-  background: repeating-linear-gradient(45deg, transparent, transparent 7px, rgba(232,184,75,0.04) 7px, rgba(232,184,75,0.04) 8px);
-}
-
-.bs {
-  font-size: 42px;
-  color: rgba(232,184,75,0.3);
-  z-index: 1;
-  animation: bpulse 3s ease-in-out infinite;
-}
-
-.cw:nth-child(2) .bs { animation-delay: 1s; }
-.cw:nth-child(3) .bs { animation-delay: 2s; }
-
-@keyframes bpulse {
-  0%,100% { opacity: 0.3; }
-  50% { opacity: 0.65; }
-}
-
-.bn {
-  font-size: 0.52rem;
-  color: rgba(232,184,75,0.25);
-  letter-spacing: 3px;
-  z-index: 1;
-}
+.bs { font-size: 42px; color: rgba(232,184,75,0.3); animation: bpulse 3s infinite; }
+@keyframes bpulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.7; } }
 
 .cf { transform: rotateY(180deg); background: #050010; }
-
-.cf img {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  border-radius: 9px;
-  display: none;
-}
+.cf img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
 
 .cf .loading {
-  position: absolute;
-  inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   background: #0a0020;
-  border-radius: 9px;
 }
-
-.cf .loading::after {
-  content: '✦';
-  font-size: 22px;
-  color: rgba(232,184,75,0.4);
-  animation: spin 1.8s linear infinite;
-}
-
+.cf .loading::after { content: '✦'; animation: spin 1.8s linear infinite; color: var(--gold); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .cf .lbl {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 22px 6px 8px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.92));
-  font-size: 0.58rem;
-  letter-spacing: 2px;
-  text-align: center;
-  color: var(--gold);
-  border-radius: 0 0 9px 9px;
-}
-
-/* INFO */
-.info {
-  position: relative; z-index: 10;
-  text-align: center;
-  min-height: 75px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 7px;
-  margin: 8px 0;
-}
-
-#cname {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(0.9rem, 3.5vw, 1.5rem);
-  color: var(--gold);
-  text-shadow: 0 0 25px rgba(232,184,75,0.8);
-  letter-spacing: 4px;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.5s, transform 0.5s;
-}
-
-#cname.show { opacity:1; transform:translateY(0); }
-
-#msg {
-  font-size: 0.62rem;
-  color: var(--text-dim);
-  letter-spacing: 4px;
-  transition: opacity 0.25s;
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 15px 5px 5px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  font-size: 0.55rem; text-align: center; color: var(--gold);
 }
 
 /* BUTTON */
-.bwrap { position: relative; z-index: 10; }
-
 button {
-  background: transparent;
-  color: var(--gold);
-  border: 1.5px solid rgba(232,184,75,0.6);
-  padding: 13px 36px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
-  letter-spacing: 5px;
-  cursor: pointer;
-  transition: all 0.35s;
-  position: relative;
-  overflow: hidden;
+  background: transparent; color: var(--gold); border: 1.5px solid var(--gold);
+  padding: 12px 30px; font-family: 'Cinzel'; cursor: pointer; letter-spacing: 3px;
+  transition: 0.3s; z-index: 100; position: relative;
 }
+button:hover { background: var(--gold); color: black; box-shadow: 0 0 20px var(--gold); }
 
-button::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  background: var(--gold);
-  z-index: -1;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s ease;
-}
-
-button:hover::before { transform: scaleX(1); }
-button:hover { color: #0a0015; box-shadow: 0 0 35px rgba(232,184,75,0.5); }
-button:active { transform: scale(0.97); }
-
-/* FLIP PARTICLES */
-.fp {
-  position: fixed;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9997;
-  transform: translate(-50%,-50%);
-  animation: fpburst 0.8s forwards ease-out;
-}
-
-@keyframes fpburst {
+/* Particles */
+.fp { position: fixed; width: 4px; height: 4px; border-radius: 50%; pointer-events: none; animation: fpburst 0.8s forwards; }
+@keyframes fpburst { 
   0% { transform: translate(-50%,-50%) scale(1); opacity:1; }
   100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity:0; }
 }
 
-@media (max-width: 540px) {
-  .cw { width: 95px; height: 152px; }
-  .cf, .cb { border-radius: 9px; }
-  #spread { gap: 12px; }
-  #pile { width: 95px; height: 152px; }
-  .pc { border-radius: 9px; }
-  .bs { font-size: 30px; }
-}
+@media (max-width: 540px) { .cw { width: 90px; height: 145px; } #spread { gap: 10px; } }
 </style>
 </head>
 <body>
@@ -396,236 +200,123 @@ button:active { transform: scale(0.97); }
   <div class="subtitle">GEÇMİŞ &nbsp;·&nbsp; ŞİMDİ &nbsp;·&nbsp; GELECEK</div>
 </div>
 
-<div class="scene" id="scene">
+<div class="scene">
   <div id="pile">
-    <div class="pc" id="p4"></div>
-    <div class="pc" id="p3"></div>
-    <div class="pc" id="p2"></div>
-    <div class="pc" id="p1"></div>
-    <div class="pc" id="p0"></div>
+    <div class="pc" style="transform: rotate(-2deg)"></div>
+    <div class="pc" style="transform: rotate(1deg) translate(2px, 2px)"></div>
+    <div class="pc" id="p_top"></div>
   </div>
 
   <div id="spread">
-    <div class="cw" id="cw0" onclick="flipCard(0)">
-      <div class="cb"><span class="bs">☽</span><span class="bn">I</span></div>
-      <div class="cf" id="cf0"><div class="loading"></div><img id="img0"/><div class="lbl" id="lbl0"></div></div>
-    </div>
-    <div class="cw" id="cw1" onclick="flipCard(1)">
-      <div class="cb"><span class="bs">☀</span><span class="bn">II</span></div>
-      <div class="cf" id="cf1"><div class="loading"></div><img id="img1"/><div class="lbl" id="lbl1"></div></div>
-    </div>
-    <div class="cw" id="cw2" onclick="flipCard(2)">
-      <div class="cb"><span class="bs">✦</span><span class="bn">III</span></div>
-      <div class="cf" id="cf2"><div class="loading"></div><img id="img2"/><div class="lbl" id="lbl2"></div></div>
-    </div>
+    <div class="cw" id="cw0" onclick="flipCard(0)"><div class="cb"><span class="bs">☽</span></div><div class="cf" id="cf0"><div class="loading"></div><img id="img0"/><div class="lbl" id="lbl0"></div></div></div>
+    <div class="cw" id="cw1" onclick="flipCard(1)"><div class="cb"><span class="bs">☀</span></div><div class="cf" id="cf1"><div class="loading"></div><img id="img1"/><div class="lbl" id="lbl1"></div></div></div>
+    <div class="cw" id="cw2" onclick="flipCard(2)"><div class="cb"><span class="bs">✦</span></div><div class="cf" id="cf2"><div class="loading"></div><img id="img2"/><div class="lbl" id="lbl2"></div></div></div>
   </div>
 </div>
 
-<div class="info">
-  <div id="cname"></div>
-  <div id="msg">Gözlerini kapat ve odaklan...</div>
+<div class="info" style="margin-top: 20px; text-align: center; min-height: 50px;">
+  <div id="cname" style="color: var(--gold); font-size: 1.2rem; margin-bottom: 5px;"></div>
+  <div id="msg" style="color: var(--text-dim); font-size: 0.7rem;">Kaderini karıştır...</div>
 </div>
 
-<div class="bwrap">
-  <button onclick="shuffleDeck()">✦ &nbsp; KADERI KARIŞTIR &nbsp; ✦</button>
+<div class="bwrap" style="margin-top: 20px;">
+  <button onclick="shuffleDeck()">KADERİ KARIŞTIR</button>
 </div>
 
 <script>
-/* CURSOR */
 const $cur = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
   $cur.style.left = e.clientX + 'px';
   $cur.style.top = e.clientY + 'px';
-  if (Math.random() > 0.65) {
+  if (Math.random() > 0.7) {
     const s = document.createElement('div');
     s.className = 'sparkle';
-    const dx = (Math.random()-0.5)*50, dy = (Math.random()-0.5)*50;
+    const dx = (Math.random()-0.5)*60, dy = (Math.random()-0.5)*60;
     s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--dx:${dx}px;--dy:${dy}px`;
     document.body.appendChild(s);
     setTimeout(() => s.remove(), 700);
   }
 });
 
-/* DECK */
-const MAJORS = [
-  "Deli","Büyücü","Yüce Rahibe","İmparatoriçe","İmparator",
-  "Hiyerofant","Âşıklar","Savaş Arabası","Güç","Ermiş",
-  "Kader Çarkı","Adalet","Asılan Adam","Ölüm","Denge",
-  "Şeytan","Yıkılan Kule","Yıldız","Ay","Güneş","Yargılama","Dünya"
-];
+const MAJORS = ["Deli","Büyücü","Yüce Rahibe","İmparatoriçe","İmparator","Hiyerofant","Âşıklar","Savaş Arabası","Güç","Ermiş","Kader Çarkı","Adalet","Asılan Adam","Ölüm","Denge","Şeytan","Yıkılan Kule","Yıldız","Ay","Güneş","Yargılama","Dünya"];
 const SUITS = [{e:"c",t:"Kupa"},{e:"p",t:"Tılsım"},{e:"s",t:"Kılıç"},{e:"w",t:"Değnek"}];
-const RANKS = ["Ası","İkilisi","Üçlüsü","Dörtlüsü","Beşlisi","Altılısı",
-               "Yedilisi","Sekizlisi","Dokuzlusu","Onlusu","Ulağı","Şövalyesi","Kraliçesi","Kralı"];
+const RANKS = ["Ası","İkilisi","Üçlüsü","Dörtlüsü","Beşlisi","Altılısı","Yedilisi","Sekizlisi","Dokuzlusu","Onlusu","Ulağı","Şövalyesi","Kraliçesi","Kralı"];
 
 const DECK = MAJORS.map((n,i) => ({n, f:`m${String(i).padStart(2,'0')}`}));
 SUITS.forEach(s => RANKS.forEach((r,i) => DECK.push({n:`${s.t} ${r}`, f:`${s.e}${String(i+1).padStart(2,'0')}`})));
 
-/* Image sources — tries multiple CDNs if one fails */
+// GÖRSEL KAYNAKLARI (En stabil olanlar en üstte)
 const SRCS = [
-  f => `https://cdn.jsdelivr.net/gh/haydenull/tarot-api@main/static/cards/${f}.jpg`,
-  f => `https://raw.githubusercontent.com/haydenull/tarot-api/main/static/cards/${f}.jpg`,
-  f => `https://raw.githubusercontent.com/lenmorld/tarot-api/master/static/cards/${f}.jpg`,
-  f => `https://unpkg.com/tarot-api@1.0.1/static/cards/${f}.jpg`,
+  f => `https://tarot-api-seven.vercel.app/static/cards/${f}.jpg`,
+  f => `https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${f}.jpg`,
+  f => `https://cdn.jsdelivr.net/gh/haydenull/tarot-api@main/static/cards/${f}.jpg`
 ];
 
 function tryLoadImg(idx, filename, si) {
-  if (si >= SRCS.length) {
-    const ld = document.querySelector(`#cf${idx} .loading`);
-    if (ld) ld.innerHTML = '<span style="color:rgba(232,184,75,0.5);font-size:0.7rem;letter-spacing:2px">✦</span>';
-    return;
-  }
+  if (si >= SRCS.length) return;
   const img = document.getElementById('img'+idx);
+  img.onerror = () => tryLoadImg(idx, filename, si + 1);
   img.onload = () => {
-    const ld = document.querySelector(`#cf${idx} .loading`);
-    if (ld) ld.style.display = 'none';
+    document.querySelector(`#cf${idx} .loading`).style.display = 'none';
     img.style.display = 'block';
   };
-  img.onerror = () => tryLoadImg(idx, filename, si+1);
   img.src = SRCS[si](filename);
 }
 
-/* STATE */
 let selected = [], flipped = [false,false,false], busy = false;
 
-/* SHUFFLE */
 function shuffleDeck() {
   if (busy) return;
   busy = true;
-
-  const spread = document.getElementById('spread');
-  const pile = document.getElementById('pile');
-  const cards = pile.querySelectorAll('.pc');
-
-  // Reset
-  document.getElementById('cname').className = '';
-  document.getElementById('cname').textContent = '';
-  setMsg('Ruhlar fısıldıyor...');
   flipped = [false,false,false];
+  document.getElementById('msg').textContent = "Kader karıştırılıyor...";
+  document.getElementById('cname').textContent = "";
+  document.getElementById('spread').classList.remove('on');
+  document.getElementById('pile').style.opacity = "1";
 
-  // Hide spread, show pile
-  spread.classList.remove('on');
-  pile.style.opacity = '1';
-  pile.style.pointerEvents = 'none';
-
-  // Reset pile positions
-  cards.forEach((c,i) => {
-    const dx = (i-2)*2, dy = (i-2)*1.5, rot = (i-2)*1.5;
-    c.style.transform = `translate(${dx}px,${dy}px) rotate(${rot}deg)`;
-    c.style.transition = 'transform 0.3s ease';
-  });
-
-  // Riffle animation — 5 rounds
-  let round = 0;
-  const maxRounds = 5;
-
-  function riffleRound() {
-    if (round >= maxRounds) { doFinish(); return; }
-
-    const delay = 80;
-    cards.forEach((c, i) => {
-      setTimeout(() => {
-        // Fan out to one side
-        const side = (i % 2 === 0) ? -1 : 1;
-        const spread_amt = 45 + Math.random() * 20;
-        const liftY = -35 - Math.random() * 15;
-        const rot = side * (8 + Math.random() * 8);
-        c.style.transition = `transform 0.22s cubic-bezier(0.34,1.56,0.64,1)`;
-        c.style.transform = `translateX(${side * spread_amt}px) translateY(${liftY}px) rotate(${rot}deg)`;
-
-        setTimeout(() => {
-          // Slam back together with a slight overshoot
-          const newDx = (Math.random()-0.5)*8, newDy = (Math.random()-0.5)*6;
-          const newRot = (Math.random()-0.5)*3;
-          c.style.transition = `transform 0.18s cubic-bezier(0.25,0.46,0.45,0.94)`;
-          c.style.transform = `translate(${newDx}px,${newDy}px) rotate(${newRot}deg)`;
-        }, 240);
-      }, i * delay);
-    });
-
-    round++;
-    setTimeout(riffleRound, (cards.length * delay) + 480);
+  // Rastgele 3 kart seç
+  selected = [];
+  let used = new Set();
+  while(selected.length < 3) {
+    let r = Math.floor(Math.random() * DECK.length);
+    if(!used.has(r)) { selected.push(DECK[r]); used.add(r); }
   }
 
-  riffleRound();
-
-  function doFinish() {
-    // Pick 3 cards
-    selected = [];
-    const used = new Set();
-    while (selected.length < 3) {
-      const r = Math.floor(Math.random() * DECK.length);
-      if (!used.has(r)) { selected.push(DECK[r]); used.add(r); }
-    }
-
-    // Reset card fronts
-    for (let i = 0; i < 3; i++) {
-      const img = document.getElementById('img'+i);
-      img.style.display = 'none';
-      img.src = '';
-      const ld = document.querySelector(`#cf${i} .loading`);
-      if (ld) { ld.style.display = 'flex'; ld.innerHTML = ''; }
-      document.getElementById('lbl'+i).textContent = selected[i].n;
-      document.getElementById('cw'+i).classList.remove('flipped');
-      tryLoadImg(i, selected[i].f, 0);
-    }
-
-    // Pile fades, spread appears
-    setTimeout(() => {
-      pile.style.transition = 'opacity 0.3s';
-      pile.style.opacity = '0';
-      setTimeout(() => {
-        pile.style.opacity = '1';
-        pile.style.pointerEvents = '';
-        // Reset pile
-        cards.forEach((c,i) => {
-          const dx = (i-2)*2, dy = (i-2)*1.5, rot = (i-2)*1.5;
-          c.style.transition = 'none';
-          c.style.transform = `translate(${dx}px,${dy}px) rotate(${rot}deg)`;
-        });
-        spread.classList.add('on');
-        setMsg('Kaderini seç...');
-        busy = false;
-      }, 350);
-    }, 200);
+  // Kartları hazırla
+  for(let i=0; i<3; i++) {
+    const cw = document.getElementById('cw'+i);
+    cw.classList.remove('flipped');
+    document.getElementById('img'+i).style.display = 'none';
+    document.querySelector(`#cf${i} .loading`).style.display = 'flex';
+    document.getElementById('lbl'+i).textContent = selected[i].n;
+    tryLoadImg(i, selected[i].f, 0);
   }
+
+  setTimeout(() => {
+    document.getElementById('pile').style.opacity = "0";
+    document.getElementById('spread').classList.add('on');
+    document.getElementById('msg').textContent = "Bir kart seç...";
+    busy = false;
+  }, 1200);
 }
 
-/* FLIP */
 function flipCard(i) {
-  if (busy || selected.length === 0 || flipped[i]) return;
+  if (busy || flipped[i]) return;
   flipped[i] = true;
-
-  const cw = document.getElementById('cw'+i);
-  const rect = cw.getBoundingClientRect();
-  const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-
-  // Burst particles
-  for (let p = 0; p < 14; p++) {
+  document.getElementById('cw'+i).classList.add('flipped');
+  document.getElementById('cname').textContent = selected[i].n;
+  
+  // Patlama efekti
+  const rect = document.getElementById('cw'+i).getBoundingClientRect();
+  for (let p = 0; p < 12; p++) {
     const el = document.createElement('div');
     el.className = 'fp';
-    const ang = (p/14)*Math.PI*2;
-    const dist = 55 + Math.random()*70;
-    const cols = ['#ffd700','#ffffff','#cc88ff','#e8b84b'];
-    el.style.cssText = `left:${cx}px;top:${cy}px;--dx:${Math.cos(ang)*dist}px;--dy:${Math.sin(ang)*dist}px;background:${cols[p%cols.length]};animation-duration:${0.5+Math.random()*0.4}s`;
+    const ang = (p/12)*Math.PI*2;
+    const dist = 40 + Math.random()*50;
+    el.style.cssText = `left:${rect.left + rect.width/2}px;top:${rect.top + rect.height/2}px;--dx:${Math.cos(ang)*dist}px;--dy:${Math.sin(ang)*dist}px;background:var(--gold)`;
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 900);
+    setTimeout(() => el.remove(), 800);
   }
-
-  cw.classList.add('flipped');
-
-  const nm = document.getElementById('cname');
-  nm.classList.remove('show');
-  nm.textContent = selected[i].n;
-  requestAnimationFrame(() => requestAnimationFrame(() => nm.classList.add('show')));
-
-  const done = flipped.every(Boolean);
-  setMsg(done ? 'Yıldızlar konuştu...' : flipped.filter(Boolean).length === 1 ? 'İki kart daha...' : 'Son kart...');
-}
-
-function setMsg(t) {
-  const el = document.getElementById('msg');
-  el.style.opacity = '0';
-  setTimeout(() => { el.textContent = t; el.style.opacity = '1'; }, 220);
 }
 
 window.onload = shuffleDeck;
